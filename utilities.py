@@ -14,9 +14,11 @@ def initialize_canvas():
 def add_text_to_canvas(can, texts, page_number):
     """Add text to the canvas of specified page."""
     can.setFont("Helvetica", 12)
-    for text, x, y, font_size in texts:
-        can.setFontSize(font_size)
-        can.drawString(x, y, text)
+    for element in texts:
+        if element:
+            text, x, y, font_size = element
+            can.setFontSize(font_size)
+            can.drawString(x, y, text)
     can.showPage()
     can.save()
 
