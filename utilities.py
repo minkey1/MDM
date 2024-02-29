@@ -39,7 +39,7 @@ def add_text_to_canvas(can, texts, color,alignment="left"):
             if alignment == "left":
                 can.drawString(x, y, text)
             elif alignment == "center":
-                can.drawCenteredString(x, y, text)
+                can.drawCentredString(x, y, text)
             elif alignment == "right":
                 can.drawRightString(x, y, text)
             
@@ -107,4 +107,3 @@ texts = [
 
 if __name__ == "__main__":
     print("I told you to run overlays.py, DO NOT FUCK WITH THIS MODULE")
-    open_pdf(SYSTEM_FILE)

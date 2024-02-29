@@ -22,8 +22,8 @@ pdf.add_text(date_addable,pdf_path="Cleaned-MDM-Blank-UC.pdf")
 
 pdf.add_block([[60,546.7,36.7,15.7]])
 
-arr = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+arr = [['sdfbdf1', 'fvba2', 'bab3'], ['b4', 5, 6], [7, 8, 9]]
 table = pp.table(arr)
 print(table)
-#pdf.add_text(table)
+pdf.add_text(table,alignment='center')
 pdf.add_text([["1.",74.9,553.8,9]],color='white')
