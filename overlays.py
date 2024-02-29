@@ -1,11 +1,12 @@
+#overlays.py
 import utilities as pdf
 
 
 school_data = [
-    ["Febuary 2024", 53, 751, 9],
-    ["School name",135,690,12],
-    ["Bank name",140,660,12],
-    ["Gram Panchayat",310,690,12],
+    ["September 2024", 53, 751, 9],
+    ["School name",65,690,12],
+    ["Bank name",65,660,12],
+    ["Gram Panchayat",308,690,12],
     ["Khata Syankha",265,660,12],
     ["IFSC code",405,660,12],
     ["Block",440,690,12],
@@ -15,24 +16,22 @@ school_data = [
     ["mobile2",415,622,12],
     # Add more overlays as needed
 ]
-pdf.add_text("Cleaned-MDM-Blank-UC.pdf", school_data, page_number=1)
+pdf.add_text(school_data, page_number=1, pdf_path="Cleaned-MDM-Blank-UC.pdf")
 #this function will add the text to the MDM pdf and give an output.pdf
 
 
 table = [
     ["s68",350,550, 12],
-    ["date",100,550,12],
     ["s15",157,550,12],
     ["w15",210,550,12],
     ["r15",260,550,12],
     ["m15",305,550,12],
     ["w68",405,550,12],
     ["r68",459,550,12],
-    ["m68",507,550,12],
-    ["date2",100,535,12], #15 difference per row
+    ["m68",507,550,12], #15 difference per row
     # Add more overlays as needed
 ]
-pdf.add_text("output.pdf", table, page_number=1)
+pdf.add_text(table, page_number=1)
 #this will add more data to the output.pdf created by the function above
 
 
@@ -60,9 +59,9 @@ page2 = [
     ["12*",515,580,12],
     # Add more overlays as needed
 ]
-pdf.add_text("output.pdf", page2, page_number=2)
+pdf.add_text(page2, page_number=2)
 
-page2 = [
+page22 = [
     ["p1*",65,710,12],
     ["p3*",169,710,12],
     ["p4*",200,710,12],
@@ -104,4 +103,4 @@ page2 = [
     ["a5",208,210,12],
     ["mobile no",445,160,12],
 ]
-pdf.add_text("output.pdf", page2, page_number=2)
+pdf.add_text(page22, page_number=2)
