@@ -26,4 +26,4 @@ arr = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 table = pp.table(arr)
 print(table)
 #pdf.add_text(table)
-pdf.add_text([["1.",73.4,548.7,10]],color='white')
+pdf.add_text([["1.",74.9,553.8,9]],color='white')

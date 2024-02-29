@@ -28,7 +28,7 @@ def initialize_canvas():
     """Initialize canvas for drawing text with A4 page size."""
     return canvas.Canvas(io.BytesIO(), pagesize=A4)
 
-def add_text_to_canvas(can, texts, color):
+def add_text_to_canvas(can, texts, color,alignment="left"):
     """Add text to the canvas of specified page."""
     can.setFont("Times-Roman", 12)
     can.setFillColor(color)
@@ -36,7 +36,13 @@ def add_text_to_canvas(can, texts, color):
         if element:
             text, x, y, font_size = element
             can.setFontSize(font_size)
-            can.drawString(x, y, text)
+            if alignment == "left":
+                can.drawString(x, y, text)
+            elif alignment == "center":
+                can.drawCenteredString(x, y, text)
+            elif alignment == "right":
+                can.drawRightString(x, y, text)
+            
             if DEBUG_MODE:
                 print(text)
     can.showPage()
@@ -72,13 +78,14 @@ def add_text(texts,
              pdf_path=INPUT_FILE, 
              output_path=SYSTEM_FILE, 
              page_number=1, 
-             color="black"):
+             color="black",
+             alignment="left"):
     """Add text to the specified page of the PDF."""
     existing_pdf = open_pdf(pdf_path)
     page_number -= 1
     output = PdfWriter()
     can = initialize_canvas()
-    add_text_to_canvas(can, texts, color)  # Pass page_number here
+    add_text_to_canvas(can, texts, color,alignment)  # Pass page_number here
     merge_pages(existing_pdf, output, can._filename, page_number)  # Pass page_number here
     write_to_new_pdf(output, output_path)
 
