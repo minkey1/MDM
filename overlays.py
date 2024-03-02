@@ -2,8 +2,11 @@
 import utilities as pdf
 
 
+date = [
+    ["October 2004", 110, 751, 9]
+]
+
 school_data = [
-    ["September 2024", 53, 751, 9],
     ["School name",65,690,12],
     ["Bank name",65,660,12],
     ["Gram Panchayat",308,690,12],
@@ -16,7 +19,6 @@ school_data = [
     ["mobile2",415,622,12],
     # Add more overlays as needed
 ]
-pdf.add_text(school_data, page_number=1, pdf_path="Cleaned-MDM-Blank-UC.pdf")
 #this function will add the text to the MDM pdf and give an output.pdf
 
 
@@ -31,13 +33,12 @@ table = [
     ["m68",507,550,12], #15 difference per row
     # Add more overlays as needed
 ]
-pdf.add_text(table, page_number=1)
 #this will add more data to the output.pdf created by the function above
 
 
 page2 = [
     ["15w3", 134,580, 12],
-    ["15r3",134,567, 12]
+    ["15r3",134,567, 12],
     ["68w3",134,554,12],
     ["68r3",134,539,12],
     ["4",167,580,12],
@@ -59,7 +60,6 @@ page2 = [
     ["12*",515,580,12],
     # Add more overlays as needed
 ]
-pdf.add_text(page2, page_number=2)
 
 page22 = [
     ["p1*",65,710,12],
@@ -103,4 +103,10 @@ page22 = [
     ["a5",208,210,12],
     ["mobile no",445,160,12],
 ]
+
+pdf.add_text(pdf_path="Cleaned-MDM-Blank-UC.pdf")
+pdf.add_text(date,alignment='right')
+pdf.add_text(school_data)
+pdf.add_text(table)
+pdf.add_text(page2, page_number=2)
 pdf.add_text(page22, page_number=2)
