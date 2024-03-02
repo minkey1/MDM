@@ -1,0 +1,30 @@
+FORMATS:
+
+    block_elements =         -        x  y  w  h    color*          -          -
+
+    Block_Column   =   no_of_blocks   x  y  w  h        -       distance_y     -
+
+    text_element   =   text           x  y  -  -        -           -       font_size
+
+    Text_Column    =   text-list      x  y  -  -        -       distance_y  font_size
+
+    Text_Table     =   text-2d-list   x  y  -  -    distance_x  distance_y  font_size
+
+
+
+FUNCTIONS:
+
+
+    add_block(block_elements,   
+              pdf_path, 
+              output_path,
+              page_number,
+              color)
+
+
+    add_text(text_elements,
+             pdf_path, 
+             output_path, 
+             page_number, 
+             color,
+             alignment)

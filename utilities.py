@@ -50,13 +50,37 @@ def add_text_to_canvas(can, texts, color,alignment="left"):
 
 def add_block_to_canvas(can, blocks, color):
     """Add text to the canvas of specified page."""
-    can.setFillColor(color) 
+
+    can.setStrokeColor('gray') 
+    stroke = 1 if DEBUG_MODE else 0
+
     for element in blocks:
+        set_color = color
+        can.setFillColor(color)
         if element:
-            x, y, w, h = element
-            can.rect(x,y,w,h, stroke=0, fill=1)
+            if len(element) == 5:
+                x, y, w, h, element_color = element
+                set_color = element_color
+                if element_color == 'transparent':         
+                    can.rect(x,y,w,h, stroke=stroke, fill=0)
+                    if DEBUG_MODE:
+                        print(f"{set_color} block at ({x},{y},{w},{h})")
+                    continue
+
+                else:
+                    can.setFillColor(element_color)
+            elif len(element) == 4:
+                x, y, w, h = element
+            else:
+                print('''ERROR-ERROR-ERROR-ERROR-ERROR-ERROR-ERROR: 
+                      \n Wrong Format block found 
+                      \n please use [x,y,w,h,color] format 
+                      \n Skipping Current Block''')
+                continue
+
+            can.rect(x,y,w,h, stroke=stroke, fill=1)
             if DEBUG_MODE:
-                print(f"{color}block at ({x},{y},{w},{h})")
+                print(f"{set_color} block at ({x},{y},{w},{h})")
     can.showPage()
     can.save()
 
@@ -74,7 +98,7 @@ def write_to_new_pdf(output, output_path):
     with open(output_path, "wb") as f:
         output.write(f)
 
-def add_text(texts,
+def add_text(texts=[[]],
              pdf_path=INPUT_FILE, 
              output_path=SYSTEM_FILE, 
              page_number=1, 
@@ -90,7 +114,7 @@ def add_text(texts,
     write_to_new_pdf(output, output_path)
 
 
-def add_block(blocks,  page_number=1, pdf_path=SYSTEM_FILE, output_path=SYSTEM_FILE, color="black"):
+def add_block(blocks, pdf_path=SYSTEM_FILE, output_path=SYSTEM_FILE, page_number=1, color='black'):
     existing_pdf = open_pdf(pdf_path)
     page_number -= 1
     output = PdfWriter()
@@ -100,10 +124,15 @@ def add_block(blocks,  page_number=1, pdf_path=SYSTEM_FILE, output_path=SYSTEM_F
     write_to_new_pdf(output, output_path)
 
 # Example usage:
-texts = [
+'''texts = [
     ["Hello", 100, 700, 12],
     ["World!", 200, 700, 12]
 ]
+
+blocks = [
+    [100,100,100,100,'black']
+]
+'''
 
 if __name__ == "__main__":
     print("I told you to run overlays.py, DO NOT FUCK WITH THIS MODULE")
