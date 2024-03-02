@@ -53,5 +53,5 @@ def manage_holidays(holidays):
 
 pdf.add_text(pdf_path='Cleaned-MDM-Blank-UC.pdf')
 add_dates_column(2024, 6)
-holidays = [[2, 'MILK'], [5, 'SUGAR'], [8, 'WHEAT'], [23, 'NICE'], [9, 'RICE']]
+holidays = [[4, 'MILK'], [5, 'SUGAR'], [6, 'WHEAT'], [7, 'NICE'], [9, 'RICE']]
 manage_holidays(holidays)
