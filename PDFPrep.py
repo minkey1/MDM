@@ -9,7 +9,8 @@ def column(text,x=100,y=100,separation=15.8,font_size=10):
     return column
 
 def table(text,x=100,y=100,separation_x=20,separation_y=15.8,font_size=10):
-    columns = transpose(text)
+    #columns = transpose(text)
+    columns = text
     table = []
     for i in range(len(columns)):
         clmn = column(columns[i],x+i*separation_x,y,separation_y,font_size)
