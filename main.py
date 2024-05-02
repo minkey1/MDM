@@ -14,6 +14,15 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.boxlayout import BoxLayout
 import calendar
 import datetime
+import overlays
+import threading
+
+
+
+MONTH = datetime.datetime.now().month
+YEAR = datetime.datetime.now().year
+
+
 
 class MonthInput(BoxLayout):
     def __init__(self, **kwargs):
@@ -37,10 +46,108 @@ class MonthInput(BoxLayout):
     def prev_month(self, instance):
         self.current_month_index = (self.current_month_index - 1) % len(self.months)
         self.label.text = self.months[self.current_month_index]
+        MONTH = self.current_month_index + 1
         
     def next_month(self, instance):
         self.current_month_index = (self.current_month_index + 1) % len(self.months)
         self.label.text = self.months[self.current_month_index]
+        MONTH = self.current_month_index + 1
+
+
+
+
+
+
+
+class YearInput(BoxLayout):
+    def __init__(self, **kwargs):
+        super(YearInput, self).__init__(**kwargs)
+        
+        self.current_year = datetime.datetime.now().year
+        
+        self.label = Label(text=str(self.current_year), size_hint=(1, None), height=44)
+        
+        prev_button = Button(text='<', size_hint=(0.3, None), height=44)
+        prev_button.bind(on_release=self.prev_year)
+        
+        next_button = Button(text='>', size_hint=(0.3, None), height=44)
+        next_button.bind(on_release=self.next_year)
+        
+        self.add_widget(prev_button)
+        self.add_widget(self.label)
+        self.add_widget(next_button)
+        
+    def prev_year(self, instance):
+        self.current_year -= 1
+        self.label.text = str(self.current_year)
+        YEAR = self.current_year
+        
+    def next_year(self, instance):
+        self.current_year += 1
+        self.label.text = str(self.current_year)
+        YEAR = self.current_year
+
+
+
+
+
+
+
+class HolidayWidget(BoxLayout):
+    def __init__(self, button_text='Enable/Disable', **kwargs):
+        super(HolidayWidget, self).__init__(**kwargs)
+        
+        self.orientation = 'horizontal'
+
+        # Create the toggle button with dynamic text
+        self.toggle_button = ToggleButton(text=button_text, size_hint_y= None, height=50)
+        self.toggle_button.bind(state=self.toggle_fields)
+        self.add_widget(self.toggle_button)
+
+        # Create text input fields
+        self.text_input1 = TextInput(hint_text='Students 1-5', size_hint_x=1, size_hint_y= None, height=50)
+        self.text_input2 = TextInput(hint_text='Student 6-8', size_hint_x=1, size_hint_y= None, height=50)
+        self.reason_input = TextInput(hint_text='Reason for Holiday', size_hint_x=0, size_hint_y= None, height=50, disabled=True)
+
+        # Add text inputs to the layout
+        self.add_widget(self.text_input1)
+        self.add_widget(self.text_input2)
+        self.add_widget(self.reason_input)
+
+    def toggle_fields(self, instance, value):
+        if value == 'down':
+            self.text_input1.disabled = True
+            self.text_input2.disabled = True
+            self.text_input1.size_hint_x = None
+            self.text_input2.size_hint_x = None
+            self.text_input1.width = 0
+            self.text_input2.width = 0
+            self.reason_input.disabled = False
+            self.reason_input.size_hint_x = 1
+            
+
+            #self.text1 = self.text_input1.text
+            #self.text2 = self.text_input2.text
+            #self.text_input1.text = 0
+            #self.text_input2.text = 0
+        else:
+            self.text_input1.disabled = False
+            self.text_input2.disabled = False
+            self.text_input1.size_hint_x = 1
+            self.text_input2.size_hint_x = 1
+            self.reason_input.disabled = True
+            self.reason_input.size_hint_x = None
+            self.reason_input.width = 0
+            #self.text1 = self.text_input1.text
+            #self.text2 = self.text_input2.text
+
+
+
+
+
+
+
+
 
 
 class FirstScreen(Screen):
@@ -60,14 +167,12 @@ class FirstScreen(Screen):
 
         date_grid = GridLayout(cols=2, size_hint_y=None, height=100)
         date_grid.add_widget(Label(text="Month:"))
-        month_input = MonthInput()
-        month_input.bind(on_select=self.on_month_select)
-        date_grid.add_widget(month_input)
+        self.month_input = MonthInput()
+        self.month_input.bind(on_select=self.on_month_select)
+        date_grid.add_widget(self.month_input)
         date_grid.add_widget(Label(text="Year:"))
-        year_input = TextInput(input_filter="int", multiline=False, input_type="number")
-        year_input.bind(on_text_validate=lambda instance: self.move_focus_to_next_input(year_input))
-        self.text_inputs.append(year_input)
-        date_grid.add_widget(year_input)
+        self.year_input = YearInput()
+        date_grid.add_widget(self.year_input)
         layout.add_widget(date_grid)
 
 
@@ -78,21 +183,21 @@ class FirstScreen(Screen):
         # School Section
         school_grid = GridLayout(cols=2, size_hint_y=None, height=200)
         school_grid.add_widget(Label(text="MDM Code:"))
-        mdm_input = TextInput()
-        self.text_inputs.append(mdm_input)
-        school_grid.add_widget(mdm_input)
+        self.mdm_input = TextInput()
+        self.text_inputs.append(self.mdm_input)
+        school_grid.add_widget(self.mdm_input)
         school_grid.add_widget(Label(text="School Name:"))
-        school_name_input = TextInput()
-        self.text_inputs.append(school_name_input)
-        school_grid.add_widget(school_name_input)
+        self.school_name_input = TextInput()
+        self.text_inputs.append(self.school_name_input)
+        school_grid.add_widget(self.school_name_input)
         school_grid.add_widget(Label(text="Gram Panchayat:"))
-        gp_input = TextInput()
-        self.text_inputs.append(gp_input)
-        school_grid.add_widget(gp_input)
+        self.gp_input = TextInput()
+        self.text_inputs.append(self.gp_input)
+        school_grid.add_widget(self.gp_input)
         school_grid.add_widget(Label(text="Block Name:"))
-        block_input = TextInput()
-        self.text_inputs.append(block_input)
-        school_grid.add_widget(block_input)
+        self.block_input = TextInput()
+        self.text_inputs.append(self.block_input)
+        school_grid.add_widget(self.block_input)
         layout.add_widget(school_grid)
 
 
@@ -103,17 +208,17 @@ class FirstScreen(Screen):
         # Bank Section
         bank_grid = GridLayout(cols=2, size_hint_y=None, height=200)
         bank_grid.add_widget(Label(text="Bank Name:"))
-        bank_name_input = TextInput()
-        self.text_inputs.append(bank_name_input)
-        bank_grid.add_widget(bank_name_input)
+        self.bank_name_input = TextInput()
+        self.text_inputs.append(self.bank_name_input)
+        bank_grid.add_widget(self.bank_name_input)
         bank_grid.add_widget(Label(text="Account Number:"))
-        account_input = TextInput()
-        self.text_inputs.append(account_input)
-        bank_grid.add_widget(account_input)
+        self.account_input = TextInput()
+        self.text_inputs.append(self.account_input)
+        bank_grid.add_widget(self.account_input)
         bank_grid.add_widget(Label(text="IFSC Code:"))
-        ifsc_input = TextInput()
-        self.text_inputs.append(ifsc_input)
-        bank_grid.add_widget(ifsc_input)
+        self.ifsc_input = TextInput()
+        self.text_inputs.append(self.ifsc_input)
+        bank_grid.add_widget(self.ifsc_input)
         layout.add_widget(bank_grid)
 
         
@@ -124,13 +229,13 @@ class FirstScreen(Screen):
         # Contacts Section
         contacts_grid = GridLayout(cols=2, size_hint_y=None, height=200)
         contacts_grid.add_widget(Label(text="Institute Head's Number:"))
-        head_mobile_input = TextInput()
-        self.text_inputs.append(head_mobile_input)
-        contacts_grid.add_widget(head_mobile_input)
+        self.head_mobile_input = TextInput()
+        self.text_inputs.append(self.head_mobile_input)
+        contacts_grid.add_widget(self.head_mobile_input)
         contacts_grid.add_widget(Label(text="Whatsapp Number:"))
-        whatsapp_input = TextInput()
-        self.text_inputs.append(whatsapp_input)
-        contacts_grid.add_widget(whatsapp_input)
+        self.whatsapp_input = TextInput()
+        self.text_inputs.append(self.whatsapp_input)
+        contacts_grid.add_widget(self.whatsapp_input)
         layout.add_widget(contacts_grid)
 
         
@@ -141,13 +246,13 @@ class FirstScreen(Screen):
         # Student Number Section
         student_grid = GridLayout(cols=2, size_hint_y=None, height=200)
         student_grid.add_widget(Label(text="1 to 5:"))
-        student_1to5_input = TextInput()
-        self.text_inputs.append(student_1to5_input)
-        student_grid.add_widget(student_1to5_input)
+        self.student_1to5_input = TextInput()
+        self.text_inputs.append(self.student_1to5_input)
+        student_grid.add_widget(self.student_1to5_input)
         student_grid.add_widget(Label(text="6 to 8:"))
-        student_6to8_input = TextInput()
-        self.text_inputs.append(student_6to8_input)
-        student_grid.add_widget(student_6to8_input)
+        self.student_6to8_input = TextInput()
+        self.text_inputs.append(self.student_6to8_input)
+        student_grid.add_widget(self.student_6to8_input)
         layout.add_widget(student_grid)
 
         nextButton = Button(text="Next", on_press=self.change_screen, size_hint_y=None, height=50)
@@ -164,8 +269,8 @@ class FirstScreen(Screen):
             self.text_inputs[self.current_input_index].focus = True
 
     def on_month_select(self, instance, text):
-        # This method will be called when a month is selected from the dropdown
         pass
+        
 
     def on_kv_post(self, base_widget):
         super().on_kv_post(base_widget)
@@ -179,6 +284,29 @@ class FirstScreen(Screen):
 
     def change_screen(self, *args):
         self.manager.current = 'second'
+        overlays.date[0][0] = f'{self.month_input.months[self.month_input.current_month_index]} {self.year_input.current_year}'
+        overlays.school_data[0][0] = self.school_name_input.text
+        overlays.school_data[1][0] = self.bank_name_input.text
+        overlays.school_data[2][0] = self.gp_input.text
+        overlays.school_data[3][0] = self.account_input.text
+        overlays.school_data[4][0] = self.ifsc_input.text
+        overlays.school_data[5][0] = self.block_input.text
+        overlays.school_data[6][0] = self.student_1to5_input.text
+        overlays.school_data[7][0] = self.student_6to8_input.text
+        overlays.school_data[8][0] = self.head_mobile_input.text
+        overlays.school_data[9][0] = self.whatsapp_input.text
+        overlays.school_data[10][0] = self.mdm_input.text
+        # Run printSchoolData directly in a separate thread
+        threading.Thread(target=overlays.printSchoolData).start()
+
+
+
+
+
+
+
+
+
 
 
 class SecondScreen(Screen):
@@ -186,45 +314,57 @@ class SecondScreen(Screen):
         super().__init__(**kwargs)
         
         self.text_inputs = []  # List to store TextInput widgets
+        self.holiday_inputs = []
         self.current_input_index = 0  # Index of the currently focused TextInput
-
         
-        layout = GridLayout(cols=1, size_hint_y=None)
+        num_days = calendar.monthrange(2004, 10)[1]
+        element_height = 50
+        total_height = (num_days + 3) * element_height  # +3 for the button, label, and submit button
 
-        prevButton = Button(text="Go to First Screen", on_press=self.change_screen, size_hint_y=None, height=50)
+        layout = GridLayout(cols=1, size_hint_y=None, height=total_height)
+
+        prevButton = Button(text="Go to First Screen", size_hint_y=None, height=element_height)
         layout.add_widget(prevButton)
 
-        # Date Section
-        head_label = Label(text="Holidays and Present Students", size_hint_y=None, height=50)
+        head_label = Label(text="Holidays and Present Students", size_hint_y=None, height=element_height)
         layout.add_widget(head_label)
 
-        for i in range(calendar.monthrange(year=2004, month=10)[1]):
-            date_grid = GridLayout(cols=3, size_hint_y=None, height=50)
-            date_grid.add_widget(ToggleButton(text=f"Day {i+1}:", size_hint_y=None, height=50))
-            input1to5 = TextInput(hint_text="Students(1 - 5)", multiline=False, input_type="number", input_filter="int", size_hint_y= None, height= 50)
-            date_grid.add_widget(input1to5)
-            self.text_inputs.append(input1to5)
+        for i in range(num_days):
+            day = i + 1
+            is_sunday = datetime.date(2004, 10, day).weekday() == 6  # 6 represents Sunday
+            row = HolidayWidget(button_text=f'Day {day}:')
+            if is_sunday:
+                row.toggleButton.state = 'down'  # Set toggleButton to pressed
+                row.reason_input.text = "- - S U N D A Y - -"
+            self.setup_text_input(row.text_input1)
+            self.setup_text_input(row.text_input2)
+            layout.add_widget(row)
 
-            input6to8 = TextInput(hint_text="Students(6 - 8)", multiline=False, input_type="number", input_filter="int", size_hint_y= None, height= 50)
+        submit_button = Button(text="Submit", size_hint_y=None, height=element_height)
+        layout.add_widget(submit_button)
 
-
-            date_grid.add_widget(input6to8)
-            self.text_inputs.append(input6to8)
-            layout.add_widget(date_grid)
-        
-        button = Button(text="Submit", size_hint_y=None, height=50, on_press=self.process_input)
-        layout.add_widget(button)
-
-        layout.bind(minimum_height=layout.setter('height'))
-        scrollview = ScrollView(size_hint=(1, 1))
+        scrollview = ScrollView(size_hint=(1, None), size=(400, 800))  # Adjust size as necessary
         scrollview.add_widget(layout)
         self.add_widget(scrollview)
 
+    def setup_text_input(self, text_input):
+        text_input.bind(on_focus=self.on_input_focus)
+        self.text_inputs.append(text_input)
+
+    def on_input_focus(self, instance, value):
+        if value:  # If the text input gains focus
+            self.current_input_index = self.text_inputs.index(instance)
 
     def move_focus_to_next_input(self):
         self.current_input_index += 1
+        while (self.current_input_index < len(self.text_inputs) and 
+            self.text_inputs[self.current_input_index].disabled):
+            self.current_input_index += 1
+        
         if self.current_input_index < len(self.text_inputs):
             self.text_inputs[self.current_input_index].focus = True
+
+
 
     def on_kv_post(self, base_widget):
         super().on_kv_post(base_widget)
@@ -242,23 +382,29 @@ class SecondScreen(Screen):
         even_inputs = []
 
         for index, text_input in enumerate(text_inputs):
-            # Access the text property of each text input to get the input value
-            input_value = text_input.text
-            # Convert the input value to an integer
-            try:
-                input_value = int(input_value)
-            except ValueError:
-                # Handle the case where input is not a valid integer
-                input_value = 0  # or any other default value you prefer
+            if text_input.disabled:
+                # If the text input is disabled, add 0 directly
+                input_value = 0
+            else:
+                # Access the text property of each text input to get the input value
+                input_value = text_input.text
+                # Try to convert the input value to an integer
+                try:
+                    input_value = int(input_value)
+                except ValueError:
+                    # Handle the case where input is not a valid integer
+                    input_value = 0  # or any other default value you prefer
 
             # Append the input value to the appropriate list based on index
             if index % 2 == 0:  # even index
                 even_inputs.append(input_value)
             else:
                 odd_inputs.append(input_value)
-        print("1-5 inputs:", even_inputs)
-        print("6-8 inputs:", odd_inputs)
+
+        print("Even indexed inputs:", even_inputs)
+        print("Odd indexed inputs:", odd_inputs)
         return even_inputs, odd_inputs
+
 
 
     def change_screen(self, *args):

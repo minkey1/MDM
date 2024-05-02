@@ -16,13 +16,14 @@ school_data = [
     ["1 to 5",285,640,12],
     ["6 to 8",405,640,12],
     ["mobile1",210,622,12],
-    ["mobile2",415,622,12],
+    ["whatsapp",415,622,12],
+    ["MDM",457,718,12],
     # Add more overlays as needed
 ]
 #this function will add the text to the MDM pdf and give an output.pdf
 
 
-table = [
+'''table = [
     ["s68",350,550, 12],
     ["s15",157,550,12],
     ["w15",210,550,12],
@@ -102,11 +103,13 @@ page22 = [
     ["a4",208,225,12],
     ["a5",208,210,12],
     ["mobile no",445,160,12],
-]
+]'''
 
-pdf.add_text(pdf_path="Cleaned-MDM-Blank-UC.pdf")
-pdf.add_text(date,alignment='right')
-pdf.add_text(school_data)
-pdf.add_text(table)
+def printSchoolData():
+    pdf.add_text(pdf_path="Cleaned-MDM-Blank-UC.pdf")
+    pdf.add_text(date,alignment='right')
+    pdf.add_text(school_data)
+
+'''pdf.add_text(table)
 pdf.add_text(page2, page_number=2)
-pdf.add_text(page22, page_number=2)
+pdf.add_text(page22, page_number=2)'''
