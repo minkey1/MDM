@@ -8,6 +8,12 @@ def column(text,x=100,y=100,separation=15.8,font_size=10):
         column.append([text[i],x,y-i*separation,font_size]) #Here the string needs to be replaced with text variable
     return column
 
+def row(text,x=100,y=100,separation=10,font_size=10):
+    row = []
+    for i in range(len(text)):
+        row.append([text[i],x+i*separation,y,font_size]) #Here the string needs to be replaced with text variable
+    return row
+
 def table(text,x=100,y=100,separation_x=20,separation_y=15.8,font_size=10):
     #columns = transpose(text)
     columns = text

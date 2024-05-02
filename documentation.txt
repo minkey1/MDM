@@ -8,6 +8,8 @@ FORMATS:
 
     Text_Column    =   text-list      x  y  -  -        -       distance_y  font_size
 
+    Text_Row       =   text-list      x  y  -  -    distance_x      -       font_size
+
     Text_Table     =   text-2d-list   x  y  -  -    distance_x  distance_y  font_size
 
 

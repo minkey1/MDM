@@ -37,11 +37,11 @@ def add_text_to_canvas(can, texts, color,alignment="left"):
             text, x, y, font_size = element
             can.setFontSize(font_size)
             if alignment == "left":
-                can.drawString(x, y, text)
+                can.drawString(x, y, str(text))
             elif alignment == "center":
-                can.drawCentredString(x, y, text)
+                can.drawCentredString(x, y, str(text))
             elif alignment == "right":
-                can.drawRightString(x, y, text)
+                can.drawRightString(x, y, str(text))
             
             if DEBUG_MODE:
                 print(text)
@@ -72,9 +72,10 @@ def add_block_to_canvas(can, blocks, color):
             elif len(element) == 4:
                 x, y, w, h = element
             else:
-                print('''ERROR-ERROR-ERROR-ERROR-ERROR-ERROR-ERROR: 
+                print(f'''ERROR-ERROR-ERROR-ERROR-ERROR-ERROR-ERROR: 
                       \n Wrong Format block found 
-                      \n please use [x,y,w,h,color] format 
+                      \n current block: {element}
+                      \n please use [x,y,w,h] or [x,y,w,h,color] format
                       \n Skipping Current Block''')
                 continue
 
@@ -109,7 +110,7 @@ def add_text(texts=[[]],
     page_number -= 1
     output = PdfWriter()
     can = initialize_canvas()
-    add_text_to_canvas(can, texts, color,alignment)  # Pass page_number here
+    add_text_to_canvas(can, texts, color,alignment)
     merge_pages(existing_pdf, output, can._filename, page_number)  # Pass page_number here
     write_to_new_pdf(output, output_path)
 
