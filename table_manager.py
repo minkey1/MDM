@@ -131,10 +131,16 @@ def remove_wheat(data, wheat_days):
             else:
                 data[2][i-1] = '-'
 
+def length_of_data_check(data):
+    if len(data) != calendar.monthrange(YEAR, MONTH)[1]:
+        while len(data) > calendar.monthrange(YEAR, MONTH)[1]:
+            data.pop()
+    return data
+
 def table_manager():
     add_dates_column(YEAR, MONTH)
-    table1 = food_table_data(STUDENT_DATA1,1)
-    table2 = food_table_data(STUDENT_DATA2,2)
+    table1 = food_table_data(length_of_data_check(STUDENT_DATA1),1)
+    table2 = food_table_data(length_of_data_check(STUDENT_DATA2),2)
     remove_wheat(table1,WHEAT_DAYS)
     remove_wheat(table2,WHEAT_DAYS)
     sum1 = [sum(filter(lambda x: isinstance(x, (int,float)), sublist)) for sublist in table1]
